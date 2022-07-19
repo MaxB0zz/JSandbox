@@ -16,13 +16,15 @@ window.addEventListener("resize", function (){
 ctx.setTransform(1, 0, 0, 1, 0, 0);
 
 //parameters
-let size = 20; //maximum size (do not go under 1)
+let size = 10; //maximum size (do not go under 1)
 let nb_particles = 100; //nb max of particles
+let nb_particles_fire = 50;
 let particle_spawn_x = 0;
 let particle_spawn_y = c.height / 2; //coordiantes of the particle spawn
 let speed = 1
 //global variables
 let particles = [];
+let fire = [];
 
 
 class AshParticle {
@@ -47,21 +49,19 @@ class AshParticle {
     }
     draw() {
         let width = this.width / 3;
-        let height = this.height / 3;
+        //ash
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y); // 0 0
-        ctx.lineTo(this.x + width, this.y - height); // + 1w - 1h
-        ctx.lineTo(this.x + 2 * width, this.y - height); // + 2w - 1h
-        ctx.lineTo(this.x + 3 * width, this.y); // + 3w - 0
-        ctx.lineTo(this.x + 3 * width, this.y + height); // + 3w + 1h
-        ctx.lineTo(this.x + 2 * width, this.y + 2 * height); // + 2w + 2h
-        ctx.lineTo(this.x + width, this.y + 2 * height); // + 1w + 2h
-        ctx.lineTo(this.x, this.y + height); // + 0w + 1h
+        ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
         ctx.fillStyle = "hsla(" + this.color +"," + "100%," + "50%," + this.opacity + ")";
         ctx.fill();
         //glowing effect
-
-
+        ctx.beginPath();
+        ctx.arc(this.x, this.y,  3* this.width, 0, Math.PI * 2);
+        let rdg = ctx.createRadialGradient(this.x, this.y, 1, this.x, this.y, 3 * this.width);
+        rdg.addColorStop(0, "hsla(" + this.color +"," + "100%," + "50%," + this.opacity + ")");
+        rdg.addColorStop(1, "transparent");
+        ctx.fillStyle = rdg;
+        ctx.fill();
     }
     update() {
         if (this.isGlow) {
@@ -84,6 +84,32 @@ class AshParticle {
     }
 }
 
+class FireParticle {
+    constructor() {
+        this.x = 0;
+        this.y = c.height * Math.random();
+        this.opacity = Math.random() + 0.1;
+        this.color = 11;
+        this.width =10 * Math.random() * size + 3;
+        this.speed = Math.random() * 0.01 + 0.005;
+        this.direction = Math.random() * 2 - 1
+    }
+    draw () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y,  this.width, 0, Math.PI * 2);
+        let rdg = ctx.createRadialGradient(this.x, this.y, 1, this.x, this.y, this.width);
+        rdg.addColorStop(0, "hsla(" + this.color +"," + "100%," + "50%," + this.opacity + ")");
+        rdg.addColorStop(1, "transparent");
+        ctx.fillStyle = rdg;
+        ctx.fill();
+    }
+    update () {
+        this.x += 0.2;
+        this.y += this.direction;
+        this.opacity -= this.speed;
+    }
+}
+
 function createAshes() {
     for (let i = 0; i < nb_particles; i++) {
         particles.push(new AshParticle());
@@ -91,7 +117,23 @@ function createAshes() {
 }
 createAshes();
 
+function createFireParticles() {
+    for (let k = 0; k < nb_particles_fire; k++) {
+        fire.push(new FireParticle());
+    }
+}
+
+createFireParticles();
+
 function handleParticles() {
+    for (let m = 0; m < nb_particles_fire; m++) {
+        fire[m].draw()
+        if (fire[m].opacity <= 0.05) {
+            fire.splice(m, 1);
+            fire.push(new FireParticle());
+        }
+        fire[m].update()
+    }
     for (let j = 0; j < nb_particles; j++) {
         particles[j].update();
         if (particles[j].opacity <= 0.05) {
@@ -102,7 +144,9 @@ function handleParticles() {
         particles[j].draw();
 
     }
+
 }
+
 function Animate() {
     ctx.clearRect(0, 0, c.width, c.height);
     //handle particles here
