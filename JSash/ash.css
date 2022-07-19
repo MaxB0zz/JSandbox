@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#ashCanvas {
+  background-color: black;
+  position: absolute;
+}
+
+/*# sourceMappingURL=ash.css.map */

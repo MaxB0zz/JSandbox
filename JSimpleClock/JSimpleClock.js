@@ -1,9 +1,20 @@
-console.log("test1")
+let c = document.getElementById("clocktest");
+let ctx = c.getContext('2d');
 
-var c = document.getElementById("clocktest");
-var ctx = c.getContext("2d");
+c.width = window.innerWidth;
+c.height = window.innerHeight;
+
+window.addEventListener("resize", function (){
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+})
+
 ctx.beginPath();
-ctx.arc(50,50,40,0,2*Math.PI);
-ctx.stroke();
+ctx.fillStyle = 'blue';
+
+ctx.arc(0, 0, 100, 0, Math.PI * 2);
+ctx.fill();
+
 
 

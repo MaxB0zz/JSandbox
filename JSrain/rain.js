@@ -15,11 +15,11 @@ window.addEventListener("resize", function (){
 
 //global variable, parameters
 
-let nb_rain = 100; //number of snowflakes
+let nb_rain = 1000; //number of snowflakes
 let fall_speed = 5; // speed
 let rain_drops = []; //list of droplets
-let drop_size = 2;
-let drop_color = "255,255,255"; //rgb value of the color
+let drop_size = 10;
+let drop_color = "0,0,255"; //rgb value of the color
 
 // We create a class which will represent one rain Drop
 class Drop {
