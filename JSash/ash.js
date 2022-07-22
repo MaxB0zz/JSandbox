@@ -86,7 +86,7 @@ class AshParticle {
 
 class FireParticle {
     constructor() {
-        this.x = 0;
+        this.x = -20;
         this.y = c.height * Math.random();
         this.opacity = Math.random() + 0.1;
         this.color = 11;
